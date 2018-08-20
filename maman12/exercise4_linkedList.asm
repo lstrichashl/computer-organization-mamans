@@ -7,8 +7,7 @@ num5: .word 1972, num4
 newLine: .asciiz "\n"
 initGetBase4: .word 3221225472 #1100000000
 
-#$t2 - cursor element to list
-#$t3 - variable value
+
 #$t4 - sum
 #$t5 - shit
 #$t6 - sum of diveded by four
@@ -16,25 +15,27 @@ initGetBase4: .word 3221225472 #1100000000
 #$t8 - holds how nuch to shift
 #$t9 - temp
 #$s1 - holds andwise 4 base
+#$s2 - variable value
+#$s3 - cursor element to list
 
 .text
-la $t2, num1 # point to first element
+la $s3, num1 # point to first element
 la $s1, initGetBase4
 lw $s1,0($s1)
 
 get_next:
-lw $t3,0($t2) # get value of first element
-add $t4,$t4,$t3 #add element's value to sum
+lw $s2,0($s3) # get value of first element
+add $t4,$t4,$s2 #add element's value to sum
 
 # if nuber is divided by four - add it to sum
-and $t5, $t3, 11
+and $t5, $s2, 11
 bne $t5, $zero, skip_sum_four_based
-add $t6, $t6, $t3
+add $t6, $t6, $s2
 
 skip_sum_four_based:
 #get four based number
 and $t8,$t8,$zero
-move $t9, $t3
+move $t9, $s2
 get_4_base_next:
 and $t7, $t9, $s1
 srl $t7,$t7,30
@@ -48,8 +49,8 @@ bne $t8, 16, get_4_base_next
 li $v0,4
 la $a0, newLine
 syscall
-lw $t2,4($t2) #move to next element
-beq $t2,0,end
+lw $s3,4($s3) #move to next element
+beq $s3,0,end
 j get_next
 
 
