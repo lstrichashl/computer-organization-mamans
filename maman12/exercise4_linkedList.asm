@@ -7,7 +7,7 @@ num5: .word 1972, num4
 newLine: .asciiz "\n"
 initGetBase4: .word 3221225472 #1100000000
 
-
+#$t3 - flag: is digit should be printed
 #$t4 - sum
 #$t5 - shit
 #$t6 - sum of diveded by four
@@ -25,7 +25,7 @@ lw $s1,0($s1)
 
 get_next:
 lw $s2,0($s3) # get value of first element
-add $t4,$t4,$s2 #add element's value to sum
+add $t4,$t4,$s2 #add element's value to su
 
 # if nuber is divided by four - add it to sum
 and $t5, $s2, 11
@@ -36,12 +36,16 @@ skip_sum_four_based:
 #get four based number
 and $t8,$t8,$zero
 move $t9, $s2
+and $t3, $t3, $zero
 get_4_base_next:
 and $t7, $t9, $s1
 srl $t7,$t7,30
+or $t3, $t7, $t3
+beq $t3, $zero, dont_print
 li $v0,1
 move $a0,$t7
 syscall
+dont_print:
 addi $t8, $t8, 1
 sll $t9, $t9, 2
 bne $t8, 16, get_4_base_next
